@@ -67,6 +67,27 @@ public class AccountBalanceCalculatorTest {
     }
 
     @Test
+    void testTransactionHistoryAfterCalculateBalance() {
+        // Perform transactions
+        List<Transaction> transactions = Arrays.asList(
+                new Transaction(TransactionType.DEPOSIT, 200),
+                new Transaction(TransactionType.DEPOSIT, 50),
+                new Transaction(TransactionType.WITHDRAWAL, 210),
+                new Transaction(TransactionType.DEPOSIT, 40)
+        );
+
+        // Calculate balance, which should add transactions to the history
+        AccountBalanceCalculator.calculateBalance(transactions);
+
+        // Ensure the transaction history contains the correct transactions
+        List<Transaction> history = AccountBalanceCalculator.getTransactionHistory();
+        assertEquals(4, history.size(), "Transaction history should contain 4 transactions");
+
+        // Check if the transactions are correctly recorded
+        assertTrue(history.containsAll(transactions), "Transaction history should contain all transactions");
+    }
+
+    @Test
     void testTransactionHistoryAfterDeposits() {
         // Perform deposits
         List<Transaction> transactions = Arrays.asList(
@@ -134,4 +155,6 @@ public class AccountBalanceCalculatorTest {
         assertTrue(historyAfterSecondCalc.containsAll(secondTransactions), "Transaction history should contain the second set of transactions");
         assertFalse(historyAfterSecondCalc.containsAll(firstTransactions), "Transaction history should not contain the first set of transactions after the second calculation");
     }
+
+
 }
